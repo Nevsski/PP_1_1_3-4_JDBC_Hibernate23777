@@ -6,10 +6,10 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        User user1 = new User("bob", "Fedotkin", (byte) 18);
-        User user2 = new User("bob2", "Fedotkin2", (byte) 28);
-        User user3 = new User("bob3", "Fedotkin3", (byte) 38);
-        User user4 = new User("bob4", "Fedotkin4", (byte) 48);
+        User user1 = new User("Semen", "Fedotkin", (byte) 18);
+        User user2 = new User("Ivan", "Fedotkin2", (byte) 28);
+        User user3 = new User("Zak", "Fedotkin3", (byte) 38);
+        User user4 = new User("Sanya", "Fedotkin4", (byte) 48);
 
         List<User> users = new ArrayList<>();
         users.add(user1);
@@ -19,12 +19,12 @@ public class Main {
 
         UserServiceImpl userService = new UserServiceImpl();
         userService.createUsersTable();
-        users.stream().forEach(x -> {
+        users.forEach(x -> {
                     userService.saveUser(x.getName(), x.getLastName(), x.getAge());
                     System.out.println(x.getName() + " добавлен в базу данных.");
                 }
         );
-        userService.getAllUsers().stream().forEach(x -> {
+        userService.getAllUsers().forEach(x -> {
             System.out.println(x.toString());
         });
 

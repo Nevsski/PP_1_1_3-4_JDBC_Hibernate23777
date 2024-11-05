@@ -9,6 +9,12 @@ import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
 
+    private final static String CREATE_USER_TABLE_QUERY = "CREATE TABLE IF NOT EXISTS `users` ( `id` INT NOT NULL AUTO_INCREMENT," +
+            " `name` varchar(45), " +
+            "`lastname` varchar(45), " +
+            "`age` SMALLINT," +
+            "  PRIMARY KEY(`id`))";
+
     public UserDaoJDBCImpl() {
 
     }
@@ -16,13 +22,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         try (Connection connection = Util.getConnection()){
             Statement statement = connection.createStatement();
-            String SQL  = "CREATE TABLE IF NOT EXISTS `users` ( `id` INT NOT NULL AUTO_INCREMENT," +
-                    " `name` varchar(45), " +
-                    "`lastname` varchar(45), " +
-                    "`age` SMALLINT," +
-                    "  PRIMARY KEY(`id`))";
 
-            statement.executeUpdate(SQL);
+            statement.executeUpdate(CREATE_USER_TABLE_QUERY);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
