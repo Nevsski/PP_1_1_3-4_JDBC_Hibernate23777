@@ -15,12 +15,18 @@ public class UserDaoJDBCImpl implements UserDao {
             "`age` SMALLINT," +
             "  PRIMARY KEY(`id`))";
 
+    private final static String INSERT_DATA_USERS = "INSERT INTO users(name,lastname,age) VALUES( ?, ?, ?)";
+    private final static String DELETE_DATA_USERS = "DELETE FROM users WHERE id = ?";
+    private final static String SELECT_ALL_USERS = "SELECT * FROM users";
+    private final static String TRUNCATE_USERS = "TRUNCATE TABLE users";
+    private final static String DROP_TABLE_USERS = "DROP TABLE IF EXISTS users";
+
     public UserDaoJDBCImpl() {
 
     }
 
     public void createUsersTable() {
-        try (Connection connection = Util.getConnection()){
+        try (Connection connection = Util.getConnection()) {
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(CREATE_USER_TABLE_QUERY);
@@ -30,22 +36,20 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try (Connection connection = Util.getConnection()){
+        try (Connection connection = Util.getConnection()) {
             Statement statement = connection.createStatement();
 
-            String SQL = "DROP TABLE IF EXISTS users";
-
-            statement.execute(SQL);
+            statement.execute(DROP_TABLE_USERS);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        try(Connection connection = Util.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO users(name,lastname,age) VALUES( ?, ?, ?)");
+        try (Connection connection = Util.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_DATA_USERS);
 
-            preparedStatement.setString(1,name);
+            preparedStatement.setString(1, name);
             preparedStatement.setString(2, lastName);
             preparedStatement.setByte(3, age);
 
@@ -56,11 +60,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        try(Connection connection = Util.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM users WHERE id = ?");
-
+        try (Connection connection = Util.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_DATA_USERS);
             preparedStatement.setLong(1, id);
-
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -69,14 +71,12 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        try (Connection connection = Util.getConnection()){
+        try (Connection connection = Util.getConnection()) {
             Statement statement = connection.createStatement();
-            String SQL = "SELECT * FROM users";
-            ResultSet resultSet = statement.executeQuery(SQL);
+            ResultSet resultSet = statement.executeQuery(SELECT_ALL_USERS);
 
             while (resultSet.next()) {
                 User user = new User();
-
                 user.setId((long) resultSet.getInt("id"));
                 user.setName(resultSet.getString("name"));
                 user.setLastName(resultSet.getString("lastname"));
@@ -85,19 +85,15 @@ public class UserDaoJDBCImpl implements UserDao {
                 users.add(user);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.getMessage();
         }
-
         return users;
     }
 
     public void cleanUsersTable() {
-        try (Connection connection = Util.getConnection()){
+        try (Connection connection = Util.getConnection()) {
             Statement statement = connection.createStatement();
-
-            String SQL ="TRUNCATE TABLE users";
-
-            statement.execute(SQL);
+            statement.execute(TRUNCATE_USERS);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
