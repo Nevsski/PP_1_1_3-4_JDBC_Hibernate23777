@@ -1,6 +1,8 @@
 package jm.task.core.jdbc;
+
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserServiceImpl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,7 @@ public class Main {
             System.out.println(x.toString());
         });
 
-//        userService.cleanUsersTable();
-//        userService.dropUsersTable();
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
     }
 }
